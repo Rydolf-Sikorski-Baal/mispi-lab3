@@ -1,0 +1,23 @@
+<project name="Lab3" default="all" >
+
+	<classpath>
+		<pathelement location="lib/junit.jar"/>
+	</classpath>
+
+	<target name="make.dirs" description="Make dirs">
+		<mkdir dir="res"/>
+		<mkdir dir="build"/>
+		<mkdir dir="build/class"/>
+	</target>
+
+	<target name="clean" description="Clean up">
+		<echo>Cleaning up res directories</echo>
+		<delete dir="res"/>
+	</target>
+
+	<target name="compile" description="Compile java" depends="make.dirs">
+		<javac destdir="build/class">
+			<src path="src"/>
+	</target>
+
+</project>

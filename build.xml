@@ -1,0 +1,63 @@
+<project name="Lab3" default="build" >
+
+	<target name="make.dirs" description="Make dirs">
+		<mkdir dir="build"/>		
+		<mkdir dir="build/res"/>
+		<mkdir dir="build/class"/>
+		<touch file="build/MANIFEST.MF"/>
+	</target>
+
+	<target name="input" description="Create input.txt">
+		<touch file="build/res/input.txt"/>
+		<echo file="build/res/input.txt">-1
+						0
+						0.01
+						2
+						false</echo>
+	</target>
+
+	<target name="music" if="success" unless="success.done" depends="build">
+		<sound>
+			<success source="sounds/sample-3s.wav"/>
+		</sound>
+		<property name="success.done" value="true"/>
+	</target>
+
+	<target name="test" >
+		<junit printsummary="yes" haltonerror="yes">
+			<test name="Method1Test"/>
+		</junit>
+	</target>
+
+	<target name="clean" description="Clean up">
+		<echo>Cleaning up res directories</echo>
+		<delete dir="res"/>
+		<delete dir="build"/>
+	</target>
+
+	<target name="compile" description="Compile java" depends="make.dirs">
+		<javac destdir="build/class">
+			<src path="src/main/java"/>
+			<classpath>
+				<pathelement location="libs/junit.jar"/>
+				<pathelement location="libs/jfreechart-1.5.3.jar"/>
+				<pathelement location="libs/jfreechart-1.5.3-sources.jar"/>
+			</classpath>
+		</javac>
+	</target>
+	
+
+	<target name="build" description="create jar" depends="compile">7
+		<manifest file="build/MANIFEST.MF">
+			<attribute name="Main-Class" value="Main"/>
+		</manifest>
+
+		<jar destfile="build/laba.jar" manifest="build/MANIFEST.MF">
+			<fileset dir="build/class">
+				<include name="**/*.class"/>
+			</fileset>
+		</jar>
+		<property name="success" value="true"/>
+	</target>
+
+</project>
