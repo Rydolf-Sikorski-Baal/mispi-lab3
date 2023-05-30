@@ -30,7 +30,7 @@ public class Main {
         }
 
         if(inputNum == 0){
-            FileReader reader = new FileReader("res/input.txt");
+            FileReader reader = new FileReader("build/res/input.txt");
 
             Scanner scanner = new Scanner(reader);
 

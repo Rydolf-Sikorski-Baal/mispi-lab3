@@ -24,7 +24,7 @@ public class Method5 extends Method{
                         if(isConsole)
                             System.out.println("Коэффициент сходимости превышает 1: q = " + Math.min(function.phi_(b), function.phi_(a)) + "\nНевозможно выполнить метод");
                         else{
-                            FileWriter writer = new FileWriter("res/out" + method + ".txt", false);
+                            FileWriter writer = new FileWriter("build/res/out" + method + ".txt", false);
                             writer.write("Метод просто итерации\nКоэффициент сходимости превышает 1: q = " + Math.min(function.phi_(b), function.phi_(a)) + "\nНевозможно выполнить метод");
                             writer.close();
                         }
@@ -44,5 +44,10 @@ public class Method5 extends Method{
         }
         //if(type != 3)
         finalOutput(x);
+    }
+
+    @Override
+    public double getX() {
+        return x;
     }
 }
