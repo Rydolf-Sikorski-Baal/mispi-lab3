@@ -109,20 +109,32 @@
 		</junit>
 	</target>
 
-	<target name="history">
-        <trycatch>
+	<target name="run">
+		<if>
+			<equals arg1="0" arg2="0"/>
+			<then>
+				<runtarget target="music"/>
+			</then>
+			<else>
+				<echo message="false"/>
+			</else>
+		</if>
+	</target>
+
+	<target name = "history">
+          <trycatch>
             <try>
                 <runtarget target="compile"/>
                 <echo message="--- NO ERRORS, COMPILE DONE ---"/>
             </try>
             <catch>
-                <exec executable="git" outputproperty="git_log_head">
-                    <arg value="log"/>
-                    <arg value="--pretty=format:%h - %an, %ar : %s"/>
+                <exec executable="cmd" outputproperty="git_log_head">
+                    <arg value="/c"/>
+                    <arg value="git log --pretty=format:%h - %an, %ar : %s | head -1"/>
                 </exec>
-                <exec executable="git" outputproperty="git_log_tail">
-                    <arg value="log"/>
-                    <arg value="--pretty=format:%h - %an, %ar : %s"/>
+                <exec executable="cmd" outputproperty="git_log_tail">
+                    <arg value="/c"/>
+                    <arg value="git log --pretty=format:%h - %an, %ar : %s | tail -1"/>
                 </exec>
                 <if>
                     <equals arg1="${git_log_head}" arg2="${git_log_tail}"/>
@@ -130,43 +142,22 @@
                         <echo message="I cannot build the first commit. Stop"/>
                     </then>
                     <else>
-						<echo message = "${git_log_head}"/>
-						<echo message = "${git_log_tail}"/>
                         <runtarget target = "diff"/>
                         <runtarget target = "reset"/>
                         <runtarget target = "history"/>
+                        <exec executable="cmd" output="diff">
+                            <arg value="/c"/>
+                            <arg value="git diff HEAD~1"/>
+                        </exec>
+                        <exec executable="cmd">
+                            <arg value="/c"/>
+                            <arg value="git reset HEAD~1 --hard"/>
+                        </exec>
+                        <runtarget target="history"/>
                     </else>
                 </if>
             </catch>
         </trycatch>
     </target>
-
-	<target name = "diff">
-		<exec executable="git" output="diff">
-            <arg value="diff"/>
-            <arg value="HEAD~1"/>
-        </exec>
-	</target>
-
-	<target name = "reset">
-		<exec executable="git">
-			<arg value="reset"/>
-			<arg value="HEAD~1"/>
-			<arg value="--hard"/>
-		</exec>
-	</target>
-
-	<target name = "try">
-		<exec executable="git" outputproperty="git_log_head">
-            <arg value="log"/>
-            <arg value="--pretty=format:%h - %an, %ar : %s"/>
-        </exec>
-        <exec executable="git" outputproperty="git_log_tail">
-            <arg value="log"/>
-            <arg value="--pretty=format:%h - %an, %ar : %s"/>
-        </exec>
-		<echo message = "${git_log_head}"/>
-		<echo message = "${git_log_tail}"/>
-	</target>
 
 </project>
