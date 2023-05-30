@@ -4,6 +4,7 @@ import java.io.IOException;
 public abstract class Method {
     PrinterTable printerTable = new PrinterTable();
 
+    protected double x, delta = 1;
     protected double a, b, e;
     protected int iteration = 0, method;
     protected boolean isConsole;
@@ -23,7 +24,7 @@ public abstract class Method {
             System.out.println(str + "\n" +
                     "Решение уравнения на интервале [ " + a + "; " + b + " ]\nТочность: " + e + "\n\n");
         } else {
-            writer = new FileWriter("res/out" + method + ".txt", false);
+            writer = new FileWriter("build/res/out" + method + ".txt", false);
             writer.write(str + "\n" +
                     "Решение уравнения на интервале [ " + a + "; " + b + " ]\nТочность: " + e + "\n\n");
             writer.close();
@@ -34,7 +35,7 @@ public abstract class Method {
 
     public void finalOutput(double x) throws IOException{
         if(!isConsole) {
-            FileWriter writer = new FileWriter("res/out" + method + ".txt", true);
+            FileWriter writer = new FileWriter("build/res/out" + method + ".txt", true);
             writer.write("\nКорень уравнения:\n");
             writer.write("x* = " + x + "\n");
             writer.write("f(x*) = " + Function.f(x));
@@ -44,5 +45,9 @@ public abstract class Method {
             System.out.println("x* = " + x);
             System.out.print("f(x*) = " + Function.f(x));
         }
+    }
+
+    public double getX() {
+        return x;
     }
 }

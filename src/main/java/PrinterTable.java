@@ -17,7 +17,7 @@ public class PrinterTable {
      */
     public void printHeader(boolean isConsole, int n, String... args) throws IOException{
         if(!isConsole){
-            FileWriter writer = new FileWriter("res/out" + n + ".txt", true);
+            FileWriter writer = new FileWriter("build/res/out" + n + ".txt", true);
             writer.write(getHeader(args));
             writer.close();
         } else
@@ -33,7 +33,7 @@ public class PrinterTable {
      */
     public void printLine(boolean isConsole, int n, int i, double... args) throws IOException{
         if(!isConsole){
-            FileWriter writer = new FileWriter("res/out" + n + ".txt", true);
+            FileWriter writer = new FileWriter("build/res/out" + n + ".txt", true);
             writer.write(getLine(i, args));
             writer.close();
         } else

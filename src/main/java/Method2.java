@@ -32,4 +32,9 @@ public class Method2 extends Method {
         finalOutput(x);
     }
 
+    @Override
+    public double getX() {
+        return x;
+    }
+
 }

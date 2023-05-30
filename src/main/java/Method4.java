@@ -27,4 +27,9 @@ public class Method4 extends Method{
         }
         finalOutput(x);
     }
+
+    @Override
+    public double getX() {
+        return x;
+    }
 }
