@@ -1,5 +1,5 @@
 import java.io.FileWriter;
-//import java.io.IOException;
+import java.io.IOException;
 
 public class Method1 extends Method{
     public Method1(double a, double b, double e, boolean isConsole) {
