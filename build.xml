@@ -34,13 +34,22 @@
 	</target>
 
 
-	<target name="music" if="success" unless="success.done" depends="build">
-		<echo message="music done"/>
+	<target name="music">
+		<echo message="music have started"/>
 		<sound>
 			<success source="sounds/sample-3s.wav"/>
 		</sound>
 		<property name="success.done" value="true"/>
 	</target>
+
+	<target name="music2" depends="build">
+        <echo message="music playing"/>
+        <exec executable="cmd">
+            <arg value="/c"/>
+            <arg value="lib/cmdmp3.exe sound.mp3"/>
+            <arg value="-p"/>
+        </exec>
+    </target>
 
 
 	<target name="clean" description="Clean up">
@@ -91,7 +100,7 @@
 				<include name="src/test/java/*"/>
 			</fileset>
 		</jar>
-		<property name="success" value="true"/>
+		<runtarget target = "music"/>
 	</target>
 
 
@@ -112,26 +121,29 @@
 	<target name="history">
         <trycatch>
             <try>
+				<echo message = "trying to compile"/>
                 <runtarget target="compile"/>
                 <echo message="--- NO ERRORS, COMPILE DONE ---"/>
             </try>
             <catch>
                 <exec executable="git" outputproperty="git_log_head">
                     <arg value="log"/>
-                    <arg value="--pretty=format:%h - %an, %ar : %s"/>
+                    <arg value="8d077714b9b762852a00f8942dfb93a038d18d01"/>
                 </exec>
                 <exec executable="git" outputproperty="git_log_tail">
                     <arg value="log"/>
-                    <arg value="--pretty=format:%h - %an, %ar : %s"/>
+                    <arg value="--max-count=1"/>
                 </exec>
                 <if>
                     <equals arg1="${git_log_head}" arg2="${git_log_tail}"/>
                     <then>
+						<echo message = "current: "/>
+						<echo message = "${git_log_head}"/>
+						<echo message = "${git_log_tail}"/>
+						<echo message = ""/>
                         <echo message="I cannot build the first commit. Stop"/>
                     </then>
                     <else>
-						<echo message = "${git_log_head}"/>
-						<echo message = "${git_log_tail}"/>
                         <runtarget target = "diff"/>
                         <runtarget target = "reset"/>
                         <runtarget target = "history"/>
@@ -159,11 +171,11 @@
 	<target name = "try">
 		<exec executable="git" outputproperty="git_log_head">
             <arg value="log"/>
-            <arg value="--pretty=format:%h - %an, %ar : %s"/>
+            <arg value="origin..HEAD"/>
         </exec>
         <exec executable="git" outputproperty="git_log_tail">
             <arg value="log"/>
-            <arg value="--pretty=format:%h - %an, %ar : %s"/>
+            <arg value="--max-count=1"/>
         </exec>
 		<echo message = "${git_log_head}"/>
 		<echo message = "${git_log_tail}"/>
