@@ -1,15 +1,8 @@
-<project name="Lab3" default="build">
-	
-	<taskdef resource="net/sf/antcontrib/antlib.xml">
-		<classpath>
-			<pathelement location="libs/ant-contrib-1.0b3.jar"/>
-		</classpath>
-	</taskdef>
+<project name="Lab3" default="build" >
 
 	<path id="classpath.source">
 		<fileset dir="libs" includes="**/*.jar"/>
 	</path>
-
 
 	<target name="make.dirs" description="Make dirs">
 		<echo message="dirs created"/>
@@ -17,11 +10,8 @@
 		<mkdir dir="build/res"/>
 		<mkdir dir="build/class"/>
 		<mkdir dir="build/test"/>
-		<mkdir dir="reports"/>
-		<touch file="reports/TEST-MethodTest.xml"/>
 		<touch file="build/MANIFEST.MF"/>
 	</target>
-
 
 	<target name="input" description="Create input.txt">
 		<echo message="default input file created"/>
@@ -33,32 +23,19 @@
 						false</echo>
 	</target>
 
-
-	<target name="music">
-		<echo message="music have started"/>
+	<target name="music" if="success" unless="success.done" depends="build">
+		<echo message="music done"/>
 		<sound>
 			<success source="sounds/sample-3s.wav"/>
 		</sound>
 		<property name="success.done" value="true"/>
 	</target>
 
-	<target name="music2" depends="build">
-        <echo message="music playing"/>
-        <exec executable="cmd">
-            <arg value="/c"/>
-            <arg value="lib/cmdmp3.exe sound.mp3"/>
-            <arg value="-p"/>
-        </exec>
-    </target>
-
-
 	<target name="clean" description="Clean up">
 		<echo message="clean done"/>
 		<delete dir="res"/>
 		<delete dir="build"/>
-		<delete dir="reports"/>
 	</target>
-
 
 	<target name="compile" description="Compile java" depends="make.dirs">
 		<echo message="compile done"/>
@@ -92,7 +69,7 @@
 			<attribute name="Main-Class" value="Main"/>
 		</manifest>
 
-		<jar destfile="build/laba.jar" manifest="build/MANIFEST.MF">
+		<jar destfile="build/laba.jar" manifest="build/MANIFEST.MF" basedir = "build/class">
 			<fileset dir="build/class">
 				<include name="src/main/**/*.class"/>
 			</fileset>
@@ -100,9 +77,8 @@
 				<include name="src/test/java/*"/>
 			</fileset>
 		</jar>
-		<runtarget target = "music"/>
+		<property name="success" value="true"/>
 	</target>
-
 
 	<target name="test" description="testing programm" depends="build">
 		<echo message="tests done"/>
@@ -110,75 +86,13 @@
 			<formatter type="xml"/>
 			<classpath>
 				<pathelement location="libs/junit.jar"/>
-				<pathelement location="build/test"/>
+				<pathelement location="src/test/java"/>
+				<pathelement location="src/main/java"/>
 			</classpath>
 			<batchtest todir="reports">
-				<fileset dir="src/test/java" includes="*Test.*"/>
+				<fileset dir="build/test" includes="*Test.java"/>
 			</batchtest>
 		</junit>
-	</target>
-
-	<target name="history">
-        <trycatch>
-            <try>
-				<echo message = "trying to compile"/>
-                <runtarget target="compile"/>
-                <echo message="--- NO ERRORS, COMPILE DONE ---"/>
-            </try>
-            <catch>
-                <exec executable="git" outputproperty="git_log_head">
-                    <arg value="log"/>
-                    <arg value="8d077714b9b762852a00f8942dfb93a038d18d01"/>
-                </exec>
-                <exec executable="git" outputproperty="git_log_tail">
-                    <arg value="log"/>
-                    <arg value="--max-count=1"/>
-                </exec>
-                <if>
-                    <equals arg1="${git_log_head}" arg2="${git_log_tail}"/>
-                    <then>
-						<echo message = "current: "/>
-						<echo message = "${git_log_head}"/>
-						<echo message = "${git_log_tail}"/>
-						<echo message = ""/>
-                        <echo message="I cannot build the first commit. Stop"/>
-                    </then>
-                    <else>
-                        <runtarget target = "diff"/>
-                        <runtarget target = "reset"/>
-                        <runtarget target = "history"/>
-                    </else>
-                </if>
-            </catch>
-        </trycatch>
-    </target>
-
-	<target name = "diff">
-		<exec executable="git" output="diff">
-            <arg value="diff"/>
-            <arg value="HEAD~1"/>
-        </exec>
-	</target>
-
-	<target name = "reset">
-		<exec executable="git">
-			<arg value="reset"/>
-			<arg value="HEAD~1"/>
-			<arg value="--hard"/>
-		</exec>
-	</target>
-
-	<target name = "try">
-		<exec executable="git" outputproperty="git_log_head">
-            <arg value="log"/>
-            <arg value="origin..HEAD"/>
-        </exec>
-        <exec executable="git" outputproperty="git_log_tail">
-            <arg value="log"/>
-            <arg value="--max-count=1"/>
-        </exec>
-		<echo message = "${git_log_head}"/>
-		<echo message = "${git_log_tail}"/>
 	</target>
 
 </project>
