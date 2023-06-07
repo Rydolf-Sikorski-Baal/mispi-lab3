@@ -144,6 +144,7 @@
                         <echo message="I cannot build the first commit. Stop"/>
                     </then>
                     <else>
+			<runtarget target = "clean"/>
                         <runtarget target = "diff"/>
                         <runtarget target = "reset"/>
                         <runtarget target = "history"/>
