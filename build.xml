@@ -92,7 +92,7 @@
 			<attribute name="Main-Class" value="Main"/>
 		</manifest>
 
-		<jar destfile="build/laba.jar" manifest="build/MANIFEST.MF">
+		<jar destfile="build/laba.jar" manifest="build/MANIFEST.MF" basedir="build/class">
 			<fileset dir="build/class">
 				<include name="src/main/**/*.class"/>
 			</fileset>
