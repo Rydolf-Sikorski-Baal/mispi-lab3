@@ -154,9 +154,10 @@
     </target>
 
 	<target name = "diff">
-		<exec executable="git" output="diff">
+	<exec executable="git" output="diff">
             <arg value="diff"/>
-            <arg value="HEAD~1"/>
+            <arg value="HEAD^"/>
+	    <arg value="HEAD"/>
         </exec>
 	</target>
 
